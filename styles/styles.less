@@ -1,0 +1,205 @@
+h1 {
+    text-align: left;
+    margin: 2em;
+    margin-left: 27%;
+    
+    &:before {
+        content: '';
+        background: url(../images/logo_167.png);
+        width: 280px;
+        height: 35px;
+        display: block;
+        margin: 0.2em -2px;
+    }
+}
+
+#inetWrapper {
+    width: 75%;
+    min-width: 620px;
+    max-width: 700px;
+    
+    margin-left: auto;
+    margin-right: auto;
+    
+    margin-top: 25vh;
+}
+
+.choice {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+.line {
+
+    width: 100%;
+ 
+    > * {
+        display: inline-block;
+        width: 66%;
+        box-sizing: border-box;
+        
+        height: auto !important;
+        padding: 3px 0;
+    }
+    
+    .control-label {
+        padding: 0px 3%;
+        margin-bottom: 0;
+        width: 27%;
+        line-height: 34px; // same as input fields
+        min-height: 1px; // forces at least 1px height for attachements
+
+        & ~ div > * {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 5px;
+            line-height: 1.5em;
+            min-height: 2em;
+        }
+    }
+}
+
+select {
+    border: 1px solid;
+}
+
+div.has-error {
+
+    position: relative;
+
+    input, select, textarea {
+        border-color: #a00;
+    }
+
+    &:not(.hide-description)::after {
+        content: attr(data-error);
+        color: #a00;
+        position: absolute;
+        
+        top: 1px;
+        left: 0.5em;
+        right: 0;
+        font-size: 10px;
+        pointer-events: none;
+    }
+}
+
+label.btn {
+    
+    position: relative;
+    
+    &:after {
+        display: block;
+        position: absolute;
+        content: attr(data-counter);
+        right: 0;
+        top: 0;
+        bottom: 0;
+        line-height: 100%;
+        padding: 10px;
+        background: rgba(171, 0, 0, 0.75);
+        color: #fff;
+        
+        border: 1px solid #a00;
+        margin: -1px;
+        
+        border-radius: 0px 4px 4px 0px;
+    }
+    
+    &:before {
+        display: block;
+        position: absolute;
+        content: attr(data-content);
+        top: 100%;
+        width: 75%;
+        font-size: 8pt;
+        color: #999;
+        text-align: left;
+        line-height: 1;
+        margin: 1em 0;
+    }
+    
+    & ~ input[type=file] {
+        display: none;
+    }
+}
+
+#submit {
+    float: right;
+    width: auto;
+}
+
+@keyframes rotateicon {
+    from {
+        transform: scale(1) rotate(0deg);
+    }
+    to {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+#loading, #confirm, #submit-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    display: none;
+}
+
+#loading {
+    &:before, &:after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+
+        margin-top: -3em;
+        margin-left: -3em;
+        top: 50vh;
+        left: 50vw;
+
+        border-width: 3em;
+        border-color: transparent;
+        border-style: solid;
+        border-radius: 3em;
+        animation: rotateicon 750ms infinite linear;
+    }
+    
+    &:before {
+        border-top-color: #153da1;
+    }
+    
+    &:after {
+        border-bottom-color: #153da1;
+    }
+}
+
+#confirm, #submit-error {
+    &:after {
+        content: '✓';
+        position: absolute;
+        display: block;
+        margin-top: -0.5em;
+        margin-left: -0.5em;
+        width: 1em;
+        top: 50vh;
+        left: 50vw;
+        color: #0a0;
+        font-size: 6em;
+        
+        text-align: center;
+        background: rgba(255,255,255,0.5);
+        border-radius: 7px;
+        line-height: 1em;
+        border: 1px solid #aaa;
+    }
+}
+
+#submit-error:after {
+    color: #a00;
+    content: 'X';
+}
