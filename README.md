@@ -32,7 +32,7 @@ var lines = [ <FORM LINE>, <FORM LINE>, ... ]
     choices:  [ <CHOICE>, <CHOICE>, ... ]
 }
 
-// Foramt von <CHOICE>
+// Format von <CHOICE>
 {
     label:    "<LABEL>",
     subnodes: [ <FORM LINE>, <FORM LINE>, ... ]
