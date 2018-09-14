@@ -1,6 +1,12 @@
 (function($){
 
-                
+    /* ****************************************************************************************************
+        WARNING THIS IS A DEMO FORM AND NOT FIT OR SAVE FOR PRODUCTION ENVIRONMENTS
+
+        The following code is a demo for internal use. Please do not use it as is in a live environment
+    **************************************************************************************************** */
+
+    // Predefined structure that can be reused
     var typeChoice = function( choicesMade ) {
         return {
                     name: 'Typenbezeichnungen',
@@ -10,6 +16,7 @@
                 };
     };
 
+    // List of HTML Form input lines to generate
     var lines = [
         
         {
@@ -114,6 +121,13 @@
         }
     ];
 
+    /**
+     * Add another line to the form
+     * @param label     the label in front of the form element
+     * @param forId     a selector for which ID the label will activate a form element
+     * @param element   the element that is wrapped in the line
+     * @param parent    where the element will be added
+     */
     var addLine = function(label, forId, element, parent='#inetWrapper') {
         
         // append element
@@ -127,6 +141,10 @@
 
     };
 
+    /**
+     * Build up the structure of the form
+     * @param parent    the element where the form is added
+     */
     var buildStructure = function(parent){
         
         if ( !isNaN(parent) ) { parent = $('#inetWrapper') }
@@ -184,6 +202,7 @@
         
     };
 
+    // Init function to set up the whole form
     $(function(){
        
        // Go through lines
@@ -194,6 +213,7 @@
        $('input,textarea,select').focus(function(){ $(this).parent().addClass('hide-description'); });
        $('input,textarea,select').blur(function(){ $(this).parent().removeClass('hide-description'); });
        
+       // Handle file selection events
        $('input[type=file]').each(function(){
           $this = $(this);
           $label = $this.parents('div.line.form-group').find('label');

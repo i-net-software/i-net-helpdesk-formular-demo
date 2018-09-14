@@ -1,8 +1,39 @@
 <?php
 
+    /* ****************************************************************************************************
+        EMAIL EMPFÄNGER KONFIGURIEREN
+    **************************************************************************************************** */
+    define( "RECEIVER", "mein@helpdesk.local" );
+
+
+
+
+
+
+
+
+
+
+    /* ****************************************************************************************************
+        WARNING THIS IS A DEMO FORM AND NOT FIT OR SAVE FOR PRODUCTION ENVIRONMENTS
+
+        The following code is a demo for internal use. Please do not use it as is in a live environment
+    **************************************************************************************************** */
+
+
+
+
+
+
+
+
+    /* ****************************************************************************************************
+        Im Folgenden sollten keine weiteren Änderungen nötig sein.
+    **************************************************************************************************** */
     error_reporting(E_ALL | E_STRICT);
     if ( strtolower( $_SERVER['REQUEST_METHOD'] ) == 'post' ) {
-        
+
+        // Definition of static strings used for building the email body
         define( "EOL", "\r\n" );
         define( 'TRENNER',  '------T-' . md5(uniqid(time()*20)));
         define( 'ALTTRENNER',  '------A-' . md5(uniqid(time()*20)));
@@ -12,6 +43,14 @@
         $body = "";
         $subject = "";
 
+        /**
+         *  Append a section to the email body that contains a file attachement
+         *
+         *  @param &$secContent     the section content as reference
+         *  @param $type            the file type
+         *  @param $file            the uploaded file
+         *  @param $fileName        the name ofthe uploaded file
+         */
         function add_file_to_message( &$secContent, $type, $file, $fileName = null ){
 
             $fileID = md5($file) . '@inetsoftware.de';
@@ -35,19 +74,24 @@
             return $fileID;
         }
 
-        // Create Email
+        /**
+         *  Create the resulting email and send it
+         *
+         *  @param $data            the message to send
+         *  @param $subject         the subject line of the email
+         *  @param $mailFrom        the sender of the email
+         *  @param $alternative     an alternative body
+         */
         function send_mail( $data=null, $subject=null, $mailFrom=null, $alternative=null ) {
 
             if ( is_null($mailFrom) || is_null($data) || is_null($subject) ) { return false; }
 
             $message = $data;
             $params = "";
-            
-            /* ****************************************************************************************************
-                EMAIL EMPFÄNGER KONFIGURIEREN
-            **************************************************************************************************** */
-            $sendTo = 'mein@helpdesk.local';
 
+            $sendTo = RECEIVER;
+
+            // Prepare the email header
             $params .= "From: {$mailFrom}".EOL;
             $params .= "X-From: {$mailFrom}".EOL;
             $params .= "Reply-To: {$mailFrom}".EOL;
@@ -58,6 +102,7 @@
 
             $secContent = "";
 
+            // Add all attachements to the email
             if ( is_array($_FILES) && isset($_FILES['attachments']) ) {
                 foreach( $_FILES['attachments']['error'] as $key => $error ) {
                     if ( $error != 0 ) {
@@ -68,6 +113,8 @@
                 }
             }
 
+            // add the additional files from the image folder to the email
+            // and replace occurences in the message with a respektive CID
             $path = dirname(__FILE__) . '/images/';
             $verz = opendir($path);
             while ( $file=readdir($verz) ) {
@@ -82,7 +129,7 @@
             $Trenner = TRENNER;
             $AltTrenner = ALTTRENNER;
 
-            // Alternativer Part
+            // add an alternative text part to the message - which is text/plain
             $finalMessage = <<<OUTPUT
 
 This is a multi-part message in MIME format.
@@ -115,10 +162,15 @@ $secContent
 --$AltTrenner--
 OUTPUT;
 
+
+            // Add a "/" to the beginning of the next line to not send the message but have it printed to the console.
+
 /*
+            // print the resulting message
             print $finalMessage;
             return true;
 /*/
+            // Send the resulting message
             if ( @mail($sendTo, $subject, $finalMessage, $params) ) {
                 return true;
             }
@@ -126,6 +178,7 @@ OUTPUT;
             return false;
         }
 
+        // Gather variables from the request and add them to the email body
         foreach( $_REQUEST as $key => $val ) {
 
             if ( empty( $key ) ) { continue; }
@@ -137,6 +190,7 @@ OUTPUT;
                 continue;
             }
 
+            // Handling for specific keys
             switch( $key ) {
                 case 'submit': break;
                 case 'E-Mail': $mailto = $val; break;
@@ -147,17 +201,21 @@ OUTPUT;
 
         if ( empty($mailto) ) { $errors['mailto'] = "Eine Absender Email-Adresse muss gesetzt sein."; }
         if ( empty($subject) ) { $errors['classification'] = "Sie haben kein Thema gewählt."; }
-        
+
+        // In case of errors, they will be returned as json
         if ( !empty( $error ) ) {
             header("HTTP/1.1 500", true);
             print json_encode( array( "errors" => $error ) );
         } else {
+            // Otherwise the email will be send
             $body .= EOL . EOL . EOL;
             send_mail( nl2br($body), $subject, $mailto, $body );
         }
 
         exit;
     }
+
+    // Finally: the HTML Body Part
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="ie" lang="en"    dir="ltr"><![endif]-->
