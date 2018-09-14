@@ -21,9 +21,7 @@ Das Formular wird in unserem Beispiel anhand einer Objekt-Struktur erzeugt. Dies
 ```javascript
 // Liste der einzelnen Formular-Zeilen
 var lines = [ <FORM LINE>, <FORM LINE>, ... ]
-```
 
-```javascript
 // Format einer Formular-Zeile
 {
     name:     "<NAME>",
